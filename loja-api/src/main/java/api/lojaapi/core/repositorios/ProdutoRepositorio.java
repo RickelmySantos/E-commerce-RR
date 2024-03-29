@@ -10,4 +10,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProdutoRepositorio<E extends ProdutoBase>
         extends JpaRepository<E, Long>, JpaSpecificationExecutor<E> {
 
+
 }
