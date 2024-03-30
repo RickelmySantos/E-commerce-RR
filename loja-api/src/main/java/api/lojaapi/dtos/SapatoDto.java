@@ -2,7 +2,8 @@ package api.lojaapi.dtos;
 
 import api.lojaapi.core.entidadeBase.ProdutoBaseDto;
 import api.lojaapi.modelos.Sapato;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class SapatoDto extends ProdutoBaseDto<Sapato> {
 
     private static final long serialVersionUID = 1L;
 
-    @ToString.Include
-    @Size(max = 255)
-    private String tamanho;
+    @NotNull
+    @Min(value = 16, message = "Tamanho deve ser maior ou igual a 16")
+    private Integer tamanho;
 }

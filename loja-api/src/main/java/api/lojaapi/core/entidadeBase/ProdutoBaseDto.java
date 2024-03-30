@@ -1,6 +1,9 @@
 package api.lojaapi.core.entidadeBase;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,14 +31,19 @@ public abstract class ProdutoBaseDto<E extends ProdutoBase>
     @ToString.Include
     @EqualsAndHashCode.Include
     protected Long id;
-
+    @NotBlank
+    @Size(min = 10, max = 50, message = "Tamanho mínimo de caracteres é 10 e o máximo 50")
     protected String nome;
-
+    @NotBlank
     protected String marca;
-
+    @NotNull
     protected double preco;
-
+    @NotBlank
     protected String descricao;
+
+    protected ProdutoStatus produtoStatus;
+
+    protected CategoriaBase categoriaBase;
 
     @Override
     public int compareTo(ProdutoBaseDto<E> dto) {

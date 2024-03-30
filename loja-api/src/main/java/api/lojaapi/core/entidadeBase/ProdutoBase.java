@@ -1,6 +1,8 @@
 package api.lojaapi.core.entidadeBase;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,9 +43,14 @@ public abstract class ProdutoBase implements Comparable<ProdutoBase> {
     @Column
     protected String marca;
     @Column
-    protected double preco;
+    protected Double preco;
     @Column
     protected String descricao;
+    @Column
+    @Enumerated(EnumType.STRING)
+    protected ProdutoStatus produtoStatus;
+    @Enumerated(EnumType.STRING)
+    protected CategoriaBase categoriaBase;
 
     @Override
     public int compareTo(ProdutoBase entidade) {

@@ -44,7 +44,7 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
         }
     }
 
-    public Sapato salvar(Sapato sapato) {
+    public Sapato cadastrar(Sapato sapato) {
         validarSapato(sapato); // Validação antes de salvar
         return repositorio.save(sapato);
     }
