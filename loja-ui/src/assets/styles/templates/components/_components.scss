@@ -27,5 +27,12 @@
   flex: 1 1 auto;
   width: 100%;
   min-height: max-content;
-  background-color: gray;
+ 
+   background-color: gray;
 }
+
+.grid-container{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+

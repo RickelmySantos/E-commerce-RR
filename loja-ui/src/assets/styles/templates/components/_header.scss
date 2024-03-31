@@ -1,0 +1,47 @@
+
+.header-page {
+  height: fit-content;
+//   width:fit-content ;
+  position: sticky;
+  opacity: 0.9;
+  top: 0;
+  z-index: 1;
+  padding: 12px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+}
+
+.topbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+
+
+    &__ul{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2rem;
+    margin: 0;
+    width: fit-content;
+    gap: 2.5rem;
+    }
+
+}
+
+.icon{
+    display: flex;
+    margin-left: 4rem;
+    &__icons{
+        display: flex;
+       width: 1.2rem;
+       height: 1.2rem;
+       align-items: end;
+       margin: 0 1rem;
+       
+       
+    }
+}
