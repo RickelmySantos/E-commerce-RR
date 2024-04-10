@@ -1,10 +1,10 @@
 .fluid-content {
   display: flex;
-  flex: 1 1 auto;
+  flex: 1;
   flex-direction: column;
-  width: 90%;
-  min-height: max-content;
-  margin: 0 auto;
+  // width: 90%;
+  // min-height: max-content;
+  // margin: 0 auto;
 }
 
 .custom-scrollbar {
@@ -28,12 +28,19 @@
   flex: 1 1 auto;
   width: 100%;
   min-height: max-content;
- 
-   background-color: gray;
+
+  background-color: gray;
 }
 
-.grid-container{
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
+// .grid-container{
+//   display: grid;
+//   grid-template-columns: repeat(2, 1fr);
+// }
 
+.content-wrapper {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  justify-content: center;
+  padding: 1.5rem;
+}

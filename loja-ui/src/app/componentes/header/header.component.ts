@@ -5,9 +5,9 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
     selector: 'app-header',
     template: `
      
-     <header class="header-page ">
+     <aside class="header-page ">
         <app-sidebar></app-sidebar>
-     </header>
+     </aside>
     
     `,
     standalone: true,

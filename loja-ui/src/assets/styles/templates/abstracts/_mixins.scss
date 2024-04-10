@@ -13,37 +13,51 @@ $breakpoint arguement choices:
 - tv
 */
 @mixin responsive($breakpoint) {
-    @if $breakpoint == tablet {
-        @media only screen and (min-width: $sm) {
-            @content;
-        }
+  @if $breakpoint == tablet {
+    @media only screen and (min-width: $sm) {
+      @content;
     }
-    @if $breakpoint == tablet-landscape {
-        @media only screen and (min-width: $md) {
-            @content;
-        }
+  }
+  @if $breakpoint == tablet-landscape {
+    @media only screen and (min-width: $md) {
+      @content;
     }
-    @if $breakpoint == notebook {
-        @media only screen and (min-width: $lg) {
-            @content;
-        }
+  }
+  @if $breakpoint == notebook {
+    @media only screen and (min-width: $lg) {
+      @content;
     }
-    @if $breakpoint == desktop {
-        @media only screen and (min-width: $xl) {
-            @content;
-        }
+  }
+  @if $breakpoint == desktop {
+    @media only screen and (min-width: $xl) {
+      @content;
     }
-    @if $breakpoint == tv {
-        @media only screen and (min-width: $xxl) {
-            @content;
-        }
+  }
+  @if $breakpoint == tv {
+    @media only screen and (min-width: $xxl) {
+      @content;
     }
+  }
 }
 
 @mixin defineColor($color-name, $value) {
-    $red: red($value);
-    $green: green($value);
-    $blue: blue($value);
-    #{$color-name}: unquote("rgb(#{$red}, #{$green}, #{$blue})");
-    #{$color-name}-rgb: $red, $green, $blue;
+  $red: red($value);
+  $green: green($value);
+  $blue: blue($value);
+  #{$color-name}: unquote("rgb(#{$red}, #{$green}, #{$blue})");
+  #{$color-name}-rgb: $red, $green, $blue;
+}
+
+@mixin button-style {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 20rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 }

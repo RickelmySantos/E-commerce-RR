@@ -26,13 +26,14 @@
     display: flex;
     justify-content: space-between;
     background-color: #000;
+    height: 4rem;
     &__wrapper{
       display: flex;
       align-items: center;
       justify-content: center;
     }
     &__logo{
-        width: 8rem;
-        height: 8rem;
+        width: 4rem;
+        height: 4rem;
     }
   }

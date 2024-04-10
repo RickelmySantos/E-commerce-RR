@@ -1,63 +1,70 @@
 * {
-    text-rendering: optimizeLegibility;
-    -o-text-rendering: optimizeLegibility;
-    -ms-text-rendering: optimizeLegibility;
-    -moz-text-rendering: optimizeLegibility;
-    -webkit-text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;
+  -o-text-rendering: optimizeLegibility;
+  -ms-text-rendering: optimizeLegibility;
+  -moz-text-rendering: optimizeLegibility;
+  -webkit-text-rendering: optimizeLegibility;
 }
 
 html {
-    height: 100%;
+  height: 100%;
 
-    font-size: 56.25%; //1rem = 9px => 9px/16px=50%
-    line-height: 1.5;
+  font-size: 56.25%; //1rem = 9px => 9px/16px=50%
+  line-height: 1.5;
 
-    -webkit-text-size-adjust: 100%;
-    tab-size: 4;
-    font-feature-settings: "normal";
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-feature-settings: "normal";
 
-    @include responsive(tablet-landscape) {
-        font-size: 62.5%; //1rem = 10px => 10/16px=62.5%
-    }
+  @include responsive(tablet-landscape) {
+    font-size: 62.5%; //1rem = 10px => 10/16px=62.5%
+  }
 
-    @include responsive(notebook) {
-        font-size: 87.5%; //1rem = 14px => 14px/16px=87.5%
-        // font-size: 68.75%; //1rem = 11px => 12px/16px=75%
-    }
+  @include responsive(notebook) {
+    font-size: 87.5%; //1rem = 14px => 14px/16px=87.5%
+    // font-size: 68.75%; //1rem = 11px => 12px/16px=75%
+  }
 
-    @include responsive(desktop) {
-        // font-size: 87.5%; //1rem = 14px => 14px/16px=87.5%
-        font-size: 68.75%; //1rem = 11px => 12px/16px=75%
-    }
+  @include responsive(desktop) {
+    // font-size: 87.5%; //1rem = 14px => 14px/16px=87.5%
+    font-size: 68.75%; //1rem = 11px => 12px/16px=75%
+  }
 
-    @include responsive(tv) {
-        font-size: 75%; //1rem = 12px => 13px/16px=81.25%
-    }
+  @include responsive(tv) {
+    font-size: 75%; //1rem = 12px => 13px/16px=81.25%
+  }
 }
 
 body {
-    font-weight: $fontWeight;
-    font-feature-settings: "salt";
-    padding: 0;
-    margin: 0;
-    min-height: 100%;
-    box-sizing: border-box;
-    background: var(--surface-ground);
-    color: var(--text-color);
-    font-family: var(--font-family);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-weight: $fontWeight;
+  font-feature-settings: "salt";
+  padding: 0;
+  margin: 0;
+  min-height: 100%;
+  box-sizing: border-box;
+  background: var(--surface-ground);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
+}
+.a-generic {
+  @include button-style;
+  margin-right: 2rem;
 }
 
-ul{
-    list-style: none;
-
+ul {
+  list-style: none;
 }
 
-li{
-    cursor: pointer;
+li {
+  cursor: pointer;
+}
+
+img {
+  object-fit: cover;
 }
