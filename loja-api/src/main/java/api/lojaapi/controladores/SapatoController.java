@@ -50,6 +50,7 @@ public class SapatoController {
     // return ResponseEntity.status(HttpStatus.CREATED).body(repositorio.save(sapato));
     // }
 
+    // CADASTRAR COM IMAGEM
     @PostMapping("/cadastrar")
     public ResponseEntity<Sapato> cadastrar(
             @RequestParam(value = "imagem", required = false) MultipartFile imagem,
