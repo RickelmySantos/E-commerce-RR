@@ -1,6 +1,7 @@
 package api.lojaapi.servicos;
 
 import api.lojaapi.core.servicos.CrudService;
+import api.lojaapi.dtos.SapatoDto;
 import api.lojaapi.modelos.Sapato;
 import api.lojaapi.repositorio.SapatoRepositorio;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +50,14 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
         validarSapato(sapato); // Validação antes de salvar
         return repositorio.save(sapato);
     }
+
+    // public Sapato cadastrar(SapatoDto sapatoDto, byte[] imagem) {
+    // Sapato sapato = new Sapato();
+    // BeanUtils.copyProperties(sapatoDto, sapato);
+
+    // sapato.setImagem(imagem);
+    // return repositorio.save(sapato);
+    // }
 
     public void excluir(Long id) {
         repositorio.deleteById(id);

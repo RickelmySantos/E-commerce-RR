@@ -6,6 +6,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -51,6 +52,8 @@ public abstract class ProdutoBase implements Comparable<ProdutoBase> {
     protected ProdutoStatus produtoStatus;
     @Enumerated(EnumType.STRING)
     protected CategoriaBase categoriaBase;
+    @Lob
+    protected byte[] imagem;
 
     @Override
     public int compareTo(ProdutoBase entidade) {

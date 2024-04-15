@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
 
 
@@ -44,6 +45,8 @@ public abstract class ProdutoBaseDto<E extends ProdutoBase>
     protected ProdutoStatus produtoStatus;
 
     protected CategoriaBase categoriaBase;
+
+    protected MultipartFile imagem;
 
     @Override
     public int compareTo(ProdutoBaseDto<E> dto) {
