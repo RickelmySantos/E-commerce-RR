@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 
 @RestController
 @RequestMapping("/api/sapato")
@@ -82,6 +82,41 @@ public class SapatoController {
 
         return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
+
+
+    // @GetMapping("/paginacao")
+    // public ResponseEntity<Map<String, Object>> listarComPaginacao(
+    // @RequestParam(required = false) String nome, @RequestParam(defaultValue = "0") int page,
+    // @RequestParam(defaultValue = "5") int size) {
+
+    // Pageable paginacao = PageRequest.of(page, size);
+    // // List<Sapato> sapatos = new ArrayList<Sapato>();
+    // Page<Sapato> paginas = service.buscarComPaginacao(nome, page, size);
+    // List<Sapato> sapatos = paginas.getContent();
+
+    // Map<String, Object> response = new HashMap<>();
+
+    // response.put("sapatos", response);
+    // response.put("currentPage", paginas.getNumber());
+    // response.put("totalItems", paginas.getTotalElements());
+    // response.put("totalPages", paginas.getTotalPages());
+
+    // return new ResponseEntity<>(response, HttpStatus.OK);
+
+
+    // }
+
+    @GetMapping
+    public ResponseEntity<Page<Sapato>> buscarComPaginacao(
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "5") int PageSize) {
+
+        Page<Sapato> sapatos = service.listarComPaginacao(pageNo, PageSize);
+        return ResponseEntity.ok(sapatos);
+
+    }
+
+
 
     @GetMapping("/listar/{id}")
     public ResponseEntity<Object> listarPorId(@PathVariable(value = "id") Long id) {

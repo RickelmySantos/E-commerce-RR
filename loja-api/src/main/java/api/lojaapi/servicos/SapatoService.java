@@ -1,7 +1,6 @@
 package api.lojaapi.servicos;
 
 import api.lojaapi.core.servicos.CrudService;
-import api.lojaapi.dtos.SapatoDto;
 import api.lojaapi.modelos.Sapato;
 import api.lojaapi.repositorio.SapatoRepositorio;
 import java.util.List;
@@ -9,8 +8,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -30,6 +31,17 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
         return sapatos;
     }
 
+
+    // public Page<Sapato> buscarComPaginacao(String nome, int page, int size) {
+    // Pageable paginacao = PageRequest.of(page, size);
+    // return repositorio.findByPagination(nome, paginacao);
+    // }
+
+    public Page<Sapato> listarComPaginacao(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return repositorio.findAll(pageable);
+    }
+
     public Optional<Sapato> buscarPorId(Long id) {
         if (id <= 0) {
             throw new IllegalArgumentException("ID inválido: " + id);
@@ -47,7 +59,7 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
     }
 
     public Sapato cadastrar(Sapato sapato) {
-        validarSapato(sapato); // Validação antes de salvar
+        validarSapato(sapato);
         return repositorio.save(sapato);
     }
 
