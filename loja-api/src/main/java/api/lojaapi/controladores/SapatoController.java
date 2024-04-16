@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin
 public class SapatoController {
 
-
     private final SapatoService service;
 
     private final SapatoRepositorio repositorio;
@@ -39,16 +38,6 @@ public class SapatoController {
         this.service = service;
         this.repositorio = repositorio;
     }
-
-    // @PostMapping("/cadastrar")
-    // public ResponseEntity<Sapato> cadastrar(@RequestBody @Valid SapatoDto dto) {
-    // var sapatoModelo = new Sapato();
-    // BeanUtils.copyProperties(dto, sapatoModelo);
-
-    // Sapato sapato = service.cadastrar(sapatoModelo);
-
-    // return ResponseEntity.status(HttpStatus.CREATED).body(repositorio.save(sapato));
-    // }
 
     // CADASTRAR COM IMAGEM
     @PostMapping("/cadastrar")
@@ -74,37 +63,12 @@ public class SapatoController {
         }
     }
 
-
-
     @GetMapping("/listar")
     public ResponseEntity<List<Sapato>> listar() {
         List<Sapato> lista = service.listarTodos();
 
         return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
-
-
-    // @GetMapping("/paginacao")
-    // public ResponseEntity<Map<String, Object>> listarComPaginacao(
-    // @RequestParam(required = false) String nome, @RequestParam(defaultValue = "0") int page,
-    // @RequestParam(defaultValue = "5") int size) {
-
-    // Pageable paginacao = PageRequest.of(page, size);
-    // // List<Sapato> sapatos = new ArrayList<Sapato>();
-    // Page<Sapato> paginas = service.buscarComPaginacao(nome, page, size);
-    // List<Sapato> sapatos = paginas.getContent();
-
-    // Map<String, Object> response = new HashMap<>();
-
-    // response.put("sapatos", response);
-    // response.put("currentPage", paginas.getNumber());
-    // response.put("totalItems", paginas.getTotalElements());
-    // response.put("totalPages", paginas.getTotalPages());
-
-    // return new ResponseEntity<>(response, HttpStatus.OK);
-
-
-    // }
 
     @GetMapping
     public ResponseEntity<Page<Sapato>> buscarComPaginacao(
@@ -115,8 +79,6 @@ public class SapatoController {
         return ResponseEntity.ok(sapatos);
 
     }
-
-
 
     @GetMapping("/listar/{id}")
     public ResponseEntity<Object> listarPorId(@PathVariable(value = "id") Long id) {

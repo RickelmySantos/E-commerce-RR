@@ -31,12 +31,6 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
         return sapatos;
     }
 
-
-    // public Page<Sapato> buscarComPaginacao(String nome, int page, int size) {
-    // Pageable paginacao = PageRequest.of(page, size);
-    // return repositorio.findByPagination(nome, paginacao);
-    // }
-
     public Page<Sapato> listarComPaginacao(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         return repositorio.findAll(pageable);
@@ -62,14 +56,6 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
         validarSapato(sapato);
         return repositorio.save(sapato);
     }
-
-    // public Sapato cadastrar(SapatoDto sapatoDto, byte[] imagem) {
-    // Sapato sapato = new Sapato();
-    // BeanUtils.copyProperties(sapatoDto, sapato);
-
-    // sapato.setImagem(imagem);
-    // return repositorio.save(sapato);
-    // }
 
     public void excluir(Long id) {
         repositorio.deleteById(id);

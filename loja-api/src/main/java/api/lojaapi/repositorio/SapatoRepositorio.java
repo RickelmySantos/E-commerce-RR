@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SapatoRepositorio extends ProdutoRepositorio<Sapato> {
 
-    // Page<Sapato> findByPagination(String nome, Pageable pageable);
 }
