@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -43,24 +42,18 @@ public class SapatoController {
     @PostMapping("/cadastrar")
     public ResponseEntity<Sapato> cadastrar(
             @RequestParam(value = "imagem", required = false) MultipartFile imagem,
-            @ModelAttribute @Valid SapatoDto sapatoDto) {
+            @ModelAttribute @Valid SapatoDto sapatoDto) throws IOException {
 
-        try {
-            byte[] imagemBytes = IOUtils.toByteArray(imagem.getInputStream());
-
-            Sapato sapatoModel = new Sapato();
-            BeanUtils.copyProperties(sapatoDto, sapatoModel);
-
-            sapatoModel.setImagem(imagemBytes);
-
-            Sapato sapato = service.cadastrar(sapatoModel);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(sapato);
-
-        } catch (IOException e) {
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        byte[] imagemBytes = null;
+        if (imagemBytes != null) {
+            imagemBytes = imagem.getBytes();
         }
+        Sapato sapatoModel = new Sapato();
+        BeanUtils.copyProperties(sapatoDto, sapatoModel);
+        sapatoModel.setImagem(imagemBytes);
+
+        Sapato sapato = service.cadastrar(sapatoModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(sapato);
     }
 
     @GetMapping("/listar")

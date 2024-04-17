@@ -4,11 +4,9 @@ import api.lojaapi.core.servicos.CrudService;
 import api.lojaapi.modelos.Sapato;
 import api.lojaapi.repositorio.SapatoRepositorio;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +21,7 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
     private final SapatoRepositorio repositorio;
 
     public List<Sapato> listarTodos() {
-        List<Sapato> sapatos = repositorio.findAll();
-
-        if (sapatos.isEmpty()) {
-            throw new RuntimeException("Nenhum sapato encontrado");
-        }
-        return sapatos;
+        return repositorio.findAll();
     }
 
     public Page<Sapato> listarComPaginacao(int pageNo, int pageSize) {
@@ -37,19 +30,11 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
     }
 
     public Optional<Sapato> buscarPorId(Long id) {
-        if (id <= 0) {
+        if (id == null || id <= 0) {
             throw new IllegalArgumentException("ID inválido: " + id);
         }
 
-        try {
-            Optional<Sapato> sapatoOptional = repositorio.findById(id);
-            if (sapatoOptional.isEmpty()) {
-                throw new NoSuchElementException("Sapato não encontrado para o ID: " + id);
-            }
-            return sapatoOptional;
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Erro ao acessar o banco de dados.", e);
-        }
+        return repositorio.findById(id);
     }
 
     public Sapato cadastrar(Sapato sapato) {
@@ -58,13 +43,19 @@ public class SapatoService implements CrudService<Sapato, SapatoRepositorio> {
     }
 
     public void excluir(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID inválido: " + id);
+        }
+
         repositorio.deleteById(id);
     }
 
     private void validarSapato(Sapato sapato) {
+        if (sapato == null) {
+            throw new IllegalArgumentException("Sapato não pode ser nulo");
+        }
         if (sapato.getPreco() <= 0) {
             throw new IllegalArgumentException("O preço do sapato deve ser maior que zero.");
         }
     }
-
 }
