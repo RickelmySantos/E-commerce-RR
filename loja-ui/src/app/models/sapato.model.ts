@@ -4,6 +4,7 @@ export interface Sapato {
     marca: string;
     preco: number;
     descricao: string;
+    imagemUrl: string;
     produtoStatus: string;
     categoriaBase: string;
 }

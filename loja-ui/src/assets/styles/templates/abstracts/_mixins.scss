@@ -52,12 +52,13 @@ $breakpoint arguement choices:
   display: inline-block;
   padding: 1rem 2rem;
   background-color: #000;
-  color: #fff;
+  color: #fafafa;
   text-decoration: none;
   border-radius: 20rem;
   transition: background-color 0.3s ease;
+  cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+    color: #fff;
   }
 }

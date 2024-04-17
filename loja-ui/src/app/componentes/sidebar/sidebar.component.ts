@@ -13,9 +13,9 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component } from '@ang
             </ul>
             <div class="icon ">
                 <img class="icon__icons" src="/assets/images/search.svg" alt="Icone de busca">
-            <div>
+              <div>
                 <img class="icon__icons" src="/assets/images/carrinho.svg" alt="Icone carrinho de compras">
-            </div>
+              </div>
             </div>
             
         </nav>`,

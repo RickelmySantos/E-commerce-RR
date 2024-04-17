@@ -7,10 +7,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component } from '@ang
             <div class="header__left">
                  <h1>Encontre o seu <br> único companheiro <br> conosco</h1>
                   <p class="flex mt-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
-                  <a>
-                    <i></i>
-                    <span>Compre Agora</span>
-                  </a>
+                  <a href="#">Compre Agora</a>
             </div>
                 <img class="header__img" src="/assets/images/hero-section.jpeg" alt="Logo da seção">
         </header>
