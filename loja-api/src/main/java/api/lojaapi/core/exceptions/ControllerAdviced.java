@@ -47,6 +47,6 @@ public class ControllerAdviced extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IOException.class)
     public ResponseEntity<Object> handleIOException(IOException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("OCorreu um erro ao processar a imagem" + ex.getMessage());
+                .body("OCorreu um erro ao processar a imagem " + ex.getMessage());
     }
 }

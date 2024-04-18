@@ -2,30 +2,35 @@ package api.lojaapi.core.controller;
 
 import api.lojaapi.core.entidadeBase.ProdutoBase;
 import api.lojaapi.core.entidadeBase.ProdutoBaseDto;
+import api.lojaapi.core.mapper.MapperBase;
 import api.lojaapi.core.servicos.CrudService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 
 
-public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBaseDto> {
+public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBaseDto<? extends E>, M extends MapperBase<E, D>> {
 
     private final CrudService<E> service;
+    private final MapperBase<E, D> mapper;
 
-    public BaseController(CrudService<E> service) {
+    public BaseController(CrudService<E> service, MapperBase<E, D> mapper) {
         this.service = service;
+        this.mapper = mapper;
     }
 
     @GetMapping("/listar")
@@ -44,12 +49,15 @@ public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBas
         }
     }
 
-    @PostMapping("/cadastrar")
-    public ResponseEntity<E> cadastrar(@RequestParam("imagem") MultipartFile imagem,
-            @RequestParam("dto") String dtoJson) {
+    @PostMapping(value = "/cadastrar",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {"application/json"})
+    public ResponseEntity<E> cadastrar(
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem,
+            @RequestPart("produtoDto") @Valid D produtoDto) {
 
         try {
-            E entidade = convertJson(dtoJson);
+            E entidade = mapper.paraEntidade(produtoDto);
             entidade.setImagem(imagem.getBytes());
             E produtoSalvo = service.cadastrar(entidade);
 
@@ -63,14 +71,14 @@ public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBas
 
     @PutMapping("/{id}")
     public ResponseEntity<E> atualizar(@PathVariable Long id,
-            @RequestParam(value = "imagem", required = false) MultipartFile imagem,
-            @RequestParam("dto") String dtoJson) {
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem,
+            @RequestPart("produtoDto") D produtoDto) {
         try {
             Optional<E> entidadOptional = service.buscarPorId(id);
             if (entidadOptional.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
-            E entidade = convertJson(dtoJson);
+            E entidade = mapper.paraEntidade(produtoDto);
             if (imagem != null) {
                 entidade.setImagem(imagem.getBytes());
             }
@@ -90,10 +98,10 @@ public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBas
 
 
 
-    private E convertJson(String dtoJson) throws IOException {
+    private E convertJson(ProdutoBaseDto produtoDto) {
         ObjectMapper objectMapper = new ObjectMapper();
         Class<E> entityClass = getEntityClass();
-        return objectMapper.readValue(dtoJson, entityClass);
+        return objectMapper.convertValue(produtoDto, entityClass);
     }
 
     @SuppressWarnings("unchecked")

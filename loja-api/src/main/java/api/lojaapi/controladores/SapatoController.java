@@ -2,6 +2,7 @@ package api.lojaapi.controladores;
 
 // import org.springframework.web.multipart.MultipartFile;
 import api.lojaapi.core.controller.BaseController;
+import api.lojaapi.core.mapper.MapperBase;
 import api.lojaapi.core.servicos.CrudService;
 import api.lojaapi.dtos.SapatoDto;
 import api.lojaapi.modelos.Sapato;
@@ -33,76 +34,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class SapatoController extends BaseController<Sapato, SapatoDto> {
 
-    public SapatoController(CrudService<Sapato> service) {
-        super(service);
+    public SapatoController(CrudService<Sapato> service, MapperBase<Sapato, SapatoDto> mapper) {
+        super(service, mapper);
     }
 
 
-
-    // private final SapatoService service;
-
-    // private final SapatoRepositorio repositorio;
-
-    // public SapatoController(SapatoService service, SapatoRepositorio repositorio) {
-    // this.service = service;
-    // this.repositorio = repositorio;
-    // }
-
-    // // CADASTRAR COM IMAGEM
-    // @PostMapping("/cadastrar")
-    // public ResponseEntity<Sapato> cadastrar(
-    // @RequestParam(value = "imagem", required = false) MultipartFile imagem,
-    // @ModelAttribute @Valid SapatoDto sapatoDto) throws IOException {
-
-    // byte[] imagemBytes = null;
-    // if (imagemBytes != null) {
-    // imagemBytes = imagem.getBytes();
-    // }
-    // Sapato sapatoModel = new Sapato();
-    // BeanUtils.copyProperties(sapatoDto, sapatoModel);
-    // sapatoModel.setImagem(imagemBytes);
-
-    // Sapato sapato = service.cadastrar(sapatoModel);
-    // return ResponseEntity.status(HttpStatus.CREATED).body(sapato);
-    // }
-
-    // @GetMapping("/listar")
-    // public ResponseEntity<List<Sapato>> listar() {
-    // List<Sapato> lista = service.listarTodos();
-
-    // return ResponseEntity.status(HttpStatus.OK).body(lista);
-    // }
-
-    // @GetMapping
-    // public ResponseEntity<Page<Sapato>> buscarComPaginacao(
-    // @RequestParam(defaultValue = "0") int pageNo,
-    // @RequestParam(defaultValue = "5") int PageSize) {
-
-    // Page<Sapato> sapatos = service.listarComPaginacao(pageNo, PageSize);
-    // return ResponseEntity.ok(sapatos);
-
-    // }
-
-    // @GetMapping("/listar/{id}")
-    // public ResponseEntity<Object> listarPorId(@PathVariable(value = "id") Long id) {
-    // Optional<Sapato> sapato = service.buscarPorId(id);
-
-    // if (sapato.isEmpty()) {
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND)
-    // .body("Produto não existe na base de dados");
-    // }
-    // return ResponseEntity.status((HttpStatus.OK)).body(sapato.get());
-    // }
-
-    // @PutMapping("/atualizar/{id}")
-    // public ResponseEntity<Object> atualizar(@PathVariable(value = "id") Long id,
-    // @RequestBody @Valid SapatoDto sapatoDto) {
-    // Optional<Sapato> sapato = repositorio.findById(id);
-    // if (sapato.isEmpty()) {
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sapato não encontrado");
-    // }
-    // var sapatoModel = sapato.get();
-    // BeanUtils.copyProperties(sapatoDto, sapatoModel, "id");
-    // return ResponseEntity.status(HttpStatus.OK).body(repositorio.save(sapatoModel));
-    // }
 }
