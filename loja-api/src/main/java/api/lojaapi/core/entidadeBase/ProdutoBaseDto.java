@@ -20,13 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public abstract class ProdutoBaseDto<E extends ProdutoBase>
         implements Comparable<ProdutoBaseDto<E>> {
 
     private final static long serialVersionUID = 1L;
-
 
     @Positive
     @ToString.Include

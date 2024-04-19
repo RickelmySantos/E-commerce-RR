@@ -1,8 +1,7 @@
-package api.lojaapi.core.mapper;
+package api.lojaapi.core.entidadeBase;
 
-import api.lojaapi.core.entidadeBase.ProdutoBase;
-import api.lojaapi.core.entidadeBase.ProdutoBaseDto;
 import org.mapstruct.Mapping;
+
 
 public interface MapperBase<E extends ProdutoBase, D extends ProdutoBaseDto<? extends E>> {
 

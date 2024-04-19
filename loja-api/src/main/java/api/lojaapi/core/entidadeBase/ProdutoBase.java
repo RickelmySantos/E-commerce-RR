@@ -23,14 +23,13 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
+@ToString
 @FieldNameConstants
 @MappedSuperclass
 public abstract class ProdutoBase implements Comparable<ProdutoBase> {
 
     private static final long serialVersionUID = 1L;
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
