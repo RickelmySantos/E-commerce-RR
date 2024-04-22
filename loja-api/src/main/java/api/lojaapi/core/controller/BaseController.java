@@ -3,7 +3,8 @@ package api.lojaapi.core.controller;
 import api.lojaapi.core.entidadeBase.MapperBase;
 import api.lojaapi.core.entidadeBase.ProdutoBase;
 import api.lojaapi.core.entidadeBase.ProdutoBaseDto;
-import api.lojaapi.core.servicos.CrudService;
+import api.lojaapi.core.repositorios.ProdutoRepositorio;
+import api.lojaapi.core.servicos.CrudServiceImpl;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -19,17 +20,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 
 @Transactional(propagation = Propagation.REQUIRED)
-public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBaseDto<? extends E>, M extends MapperBase<E, D>> {
+public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBaseDto<? extends E>, M extends MapperBase<E, D>, R extends ProdutoRepositorio<E>, S extends CrudServiceImpl<E, R>> {
 
-    private final CrudService<E> service;
+    private final S service;
     private final M mapper;
 
-    public BaseController(CrudService<E> service, M mapper) {
+    public BaseController(S service, M mapper) {
         this.service = service;
         this.mapper = mapper;
     }
@@ -50,25 +53,30 @@ public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBas
         }
     }
 
-    @PostMapping(value = "/cadastrar",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = {"application/json"})
-    public ResponseEntity<E> cadastrar(
-            @RequestPart(value = "imagem", required = true) MultipartFile imagem,
-            @RequestPart("produtoDto") @Valid D produtoDto) {
+    @PostMapping("/cadastrar")
+    public ResponseEntity<D> cadastrar(@RequestBody @Valid D produtoDto) {
+        E entidade = mapper.paraEntidade(produtoDto);
+        E produtoSalvo = service.cadastrar(entidade);
 
+        D produtoSalvoDto = mapper.paraDTO(produtoSalvo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvoDto);
+
+    }
+
+    @PostMapping(value = "/cadastrar/imagem", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> cadastrarComImagem(@RequestParam("imagem") MultipartFile imagem,
+            @RequestParam("produtoId") Long produtoId) {
         try {
-            E entidade = mapper.paraEntidade(produtoDto);
-            entidade.setImagem(imagem.getBytes());
-            E produtoSalvo = service.cadastrar(entidade);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
-        } catch (IOException ex) {
+            service.salvarImagem(produtoId, imagem.getBytes());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Imagem salva com sucesso!");
+        } catch (Exception ex) {
             ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Falha ao salvar a imagem");
         }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<E> atualizar(@PathVariable Long id,
@@ -117,3 +125,27 @@ public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBas
                 .getActualTypeArguments()[1];
     }
 }
+
+
+// @PostMapping(value = "/cadastrar",
+// consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE},
+// produces = {"application/json"})
+// public ResponseEntity<D> cadastrar(
+// @RequestParam(value = "imagem", required = true) MultipartFile imagem,
+// @RequestParam("produtoDto") @Valid D produtoDto) {
+
+// try {
+// E entidade = mapper.paraEntidade(produtoDto);
+// entidade.setImagem(imagem.getBytes());
+// E produtoSalvo = service.cadastrar(entidade);
+
+// // Converter produtoSalvo para o tipo D, se necessário
+// D produtoSalvoDto = mapper.paraDTO(produtoSalvo);
+
+// return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvoDto);
+// } catch (IOException ex) {
+// ex.printStackTrace();
+// return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
+// }
+// }

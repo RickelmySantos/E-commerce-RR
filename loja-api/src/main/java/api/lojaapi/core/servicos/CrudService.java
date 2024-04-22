@@ -1,34 +1,27 @@
 package api.lojaapi.core.servicos;
 
-import api.lojaapi.core.entidadeBase.ProdutoBase;
-import java.util.List;
-import java.util.Optional;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+// @Transactional(propagation = Propagation.REQUIRED)
+// public interface CrudService<E extends ProdutoBase> {
 
+// default void validarCadastro(E entidade) {}
 
-@Transactional(propagation = Propagation.REQUIRED)
-public interface CrudService<E extends ProdutoBase> {
+// default void validarAtualizacao(E entidade) {}
 
-    default void validarCadastro(E entidade) {}
+// default void OnCadastrar(E entidade) {}
 
-    default void validarAtualizacao(E entidade) {}
+// default void OnAtualizar(E entidade) {}
 
-    default void OnCadastrar(E entidade) {}
+// default void OnExcluir(E entidadeBase) {}
 
-    default void OnAtualizar(E entidade) {}
+// List<E> listarTodos();
 
-    default void OnExcluir(E entidadeBase) {}
+// Optional<E> buscarPorId(Long id);
 
-    List<E> listarTodos();
+// E cadastrar(E entidade);
 
-    Optional<E> buscarPorId(Long id);
+// E atualizar(E entidade);
 
-    E cadastrar(E entidade);
+// void deletar(Long id);
 
-    E atualizar(E entidade);
-
-    void deletar(Long id);
-
-    E salvarImagem(Long id, byte[] imagem);
-}
+// E salvarImagem(Long id, byte[] imagem);
+// }
