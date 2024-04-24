@@ -37,6 +37,10 @@ public abstract class CrudServiceImpl<E extends ProdutoBase, R extends ProdutoRe
         repository.deleteById(id);
     }
 
+    // public E salvarComImagem( E entidade, byte[] imagme ){
+
+    // Optional<E> entiOptional =
+    // }
 
     public E salvarImagem(Long id, byte[] imagem) {
 

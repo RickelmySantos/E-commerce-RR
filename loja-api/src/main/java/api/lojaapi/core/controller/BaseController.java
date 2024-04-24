@@ -43,13 +43,25 @@ public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBas
         return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/listar/{id}")
     public ResponseEntity<Object> buscarPorId(@PathVariable Long id) {
         Optional<E> entidade = service.buscarPorId(id);
         if (entidade.isPresent()) {
-            return ResponseEntity.notFound().build();
-        } else {
             return ResponseEntity.ok(entidade.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @GetMapping("/{id}/imagem")
+    public ResponseEntity<byte[]> getImagemProduto(@PathVariable Long id) {
+        Optional<E> entidade = service.buscarPorId(id);
+        if (entidade.isPresent() && entidade.get().getImagem() != null) {
+            byte[] imagem = entidade.get().getImagem();
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -124,28 +136,31 @@ public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBas
         return (Class<D>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[1];
     }
+
+
+
+    @PostMapping(value = "/cadastrar/upload",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {"application/json"})
+    public ResponseEntity<D> cadastrar(
+            @RequestParam(value = "imagem", required = true) MultipartFile imagem,
+            @RequestParam("produtoDto") @Valid D produtoDto) {
+
+        try {
+            E entidade = mapper.paraEntidade(produtoDto);
+            entidade.setImagem(imagem.getBytes());
+            E produtoSalvo = service.cadastrar(entidade);
+
+            // Converter produtoSalvo para o tipo D, se necessário
+            D produtoSalvoDto = mapper.paraDTO(produtoSalvo);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvoDto);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
+        }
+    }
 }
 
 
-// @PostMapping(value = "/cadastrar",
-// consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE},
-// produces = {"application/json"})
-// public ResponseEntity<D> cadastrar(
-// @RequestParam(value = "imagem", required = true) MultipartFile imagem,
-// @RequestParam("produtoDto") @Valid D produtoDto) {
-
-// try {
-// E entidade = mapper.paraEntidade(produtoDto);
-// entidade.setImagem(imagem.getBytes());
-// E produtoSalvo = service.cadastrar(entidade);
-
-// // Converter produtoSalvo para o tipo D, se necessário
-// D produtoSalvoDto = mapper.paraDTO(produtoSalvo);
-
-// return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvoDto);
-// } catch (IOException ex) {
-// ex.printStackTrace();
-// return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-// }
-// }

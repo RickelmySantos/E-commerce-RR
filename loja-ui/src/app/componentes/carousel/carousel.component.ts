@@ -1,9 +1,8 @@
 import { CommonModule, NgFor } from '@angular/common';
 import {
     CUSTOM_ELEMENTS_SCHEMA,
-    ChangeDetectionStrategy,
     Component,
-    OnInit,
+    OnInit
 } from '@angular/core';
 import { CarouselModule } from 'primeng/carousel';
 import { Sapato } from '../../models/sapato.model';
@@ -12,7 +11,7 @@ import { SapatoService } from '../../services/sapato.service';
 @Component({
     selector: 'app-carousel',
     template: `
-    <div class="flex">
+    <div class="flex justify-content-center p-2">
       <a routerLink="#" class="a-generic"> Ver Lançamentos </a>
       <a routerLink="" class="a-generic"> Saiba Mais </a>
     </div>
@@ -29,9 +28,23 @@ import { SapatoService } from '../../services/sapato.service';
         </div>
     </ng-template>
     </p-carousel>
+
+  <!-- <ng-template let-sapato *ngFor="let sapatos of sapato" pTemplate="body"> 
+    <div class="flex-1">
+        <div>
+              <img [src]="'data:image/jpeg;base64,' + sapatos.imagem" alt="Imagem do Sapato">
+              <p>{{sapatos.descricao}}</p>
+        </div>
+    </div>
+</ng-template> -->
+
+<div *ngFor="let item of sapato">
+    <img [src]="'data:image/jpeg;base64,' + item.imagem" alt="Imagem do Sapato">
+</div>
+  
   `,
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    // changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [CommonModule, CarouselModule, NgFor],
 })
@@ -43,6 +56,9 @@ export class CarouselComponent implements OnInit {
     ngOnInit(): void {
         this.sapatoService.getSapatos().subscribe((data: Sapato[]) => {
             this.sapato = data;
+            // this.sapato.forEach(sapato => {
+            //     sapato.imagem = 'data:image/jpeg;base64,' + this.arrayBufferToBase64(sapato.imagem)
+            // })
             console.log(this.sapato)
         });
 
@@ -64,5 +80,25 @@ export class CarouselComponent implements OnInit {
             }
         ];
     }
+
+
+
+
+
+
+
+
+
+    arrayBufferToBase64(buffer: ArrayBuffer): string {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+
+
 
 }
