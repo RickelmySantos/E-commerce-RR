@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CarouselComponent } from './componentes/carousel/carousel.component';
+import { CarouselComponent } from './shared/utils/carousel.component';
 import { HeaderComponent } from './componentes/header/header.component';
 import { HeroComponent } from './componentes/hero/hero.component';
 

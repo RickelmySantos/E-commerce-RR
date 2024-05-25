@@ -51,20 +51,20 @@ body {
 
 a {
   text-decoration: none;
-}
-.a-generic {
-  @include button-style;
-  margin-right: 2rem;
+  color: black;
 }
 
 ul {
   list-style: none;
+  color: black;
 }
 
 li {
   cursor: pointer;
+  color: black;
 }
 
 img {
-  object-fit: cover;
+  max-width: 100%;
+  height: auto;
 }

@@ -31,7 +31,7 @@ public abstract class ProdutoBaseDto<E extends ProdutoBase>
     @EqualsAndHashCode.Include
     protected Long id;
     @NotBlank
-    @Size(min = 10, max = 50, message = "Tamanho mínimo de caracteres é 10 e o máximo 50")
+    @Size(min = 2, max = 50, message = "Tamanho mínimo de caracteres é 2 e o máximo 50")
     protected String nome;
     @NotBlank
     protected String marca;

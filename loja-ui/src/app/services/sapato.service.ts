@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, throwError } from "rxjs";
+import { Observable, catchError, map, shareReplay, throwError } from "rxjs";
 import { Sapato } from '../models/sapato.model';
 
 
@@ -10,13 +10,17 @@ export class SapatoService {
 
     constructor(private http: HttpClient) { }
 
-    getSapatos(): Observable<Sapato[]> {
-        return this.http.get<Sapato[]>(`${this.PATH}/listar`).pipe(
+    listarAllSapatos(): Observable<Sapato[]> {
+        return this.http.get<Sapato[]>(`${this.PATH}/page`).pipe(map(sapato => sapato.map(sapato => ({ ...sapato, imagem: this.conversorBase64(sapato.imagem) }))), shareReplay(1),
             catchError(error => {
-                console.error('Erro ao obter sapatos:', error);
-                return throwError('Ocorreu um erro ao obter os sapatos. Por favor, tente novamente mais tarde.');
+                console.error('Erro ao obter produtos:', error);
+                return throwError('Ocorreu um erro ao obter os produtos. Por favor, tente novamente mais tarde.');
             })
         );
+    }
+
+    private conversorBase64(base64Data: string): string {
+        return 'data:image/jpeg;base64,' + base64Data;
     }
 
 }

@@ -2,8 +2,11 @@ package api.lojaapi.core.servicos;
 
 import api.lojaapi.core.entidadeBase.ProdutoBase;
 import api.lojaapi.core.repositorios.ProdutoRepositorio;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,13 +14,16 @@ public abstract class CrudServiceImpl<E extends ProdutoBase, R extends ProdutoRe
 
     private final R repository;
 
-    public CrudServiceImpl(R repository) {
+    protected CrudServiceImpl(R repository) {
         this.repository = repository;
     }
 
-
     public List<E> listarTodos() {
         return repository.findAll();
+    }
+
+    public Page<E> findPage(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Optional<E> buscarPorId(Long id) {
@@ -32,15 +38,15 @@ public abstract class CrudServiceImpl<E extends ProdutoBase, R extends ProdutoRe
         return repository.save(entidade);
     }
 
-
     public void deletar(Long id) {
-        repository.deleteById(id);
+        Optional<E> produto = repository.findById(id);
+        if (produto.isPresent()) {
+            repository.deleteById(id);
+
+        } else {
+            throw new EntityNotFoundException("Produto com id " + id + " não existe!");
+        }
     }
-
-    // public E salvarComImagem( E entidade, byte[] imagme ){
-
-    // Optional<E> entiOptional =
-    // }
 
     public E salvarImagem(Long id, byte[] imagem) {
 
@@ -50,7 +56,7 @@ public abstract class CrudServiceImpl<E extends ProdutoBase, R extends ProdutoRe
             entidade.setImagem(imagem);
             return repository.save(entidade);
         } else {
-            throw new RuntimeException("Entidade não encontrada com o ID" + id);
+            throw new EntityNotFoundException("Produto com id " + id + " não encontrado!");
         }
     }
 }
