@@ -61,3 +61,7 @@ $breakpoint arguement choices:
     background-color: #0056b3;
   }
 }
+
+@mixin animation-delay($index) {
+  animation-delay: calc(25s / 5 * (5 - $index) * -1);
+}

@@ -5,6 +5,11 @@
   -moz-text-rendering: optimizeLegibility;
   -webkit-text-rendering: optimizeLegibility;
 }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 html {
   height: 100%;

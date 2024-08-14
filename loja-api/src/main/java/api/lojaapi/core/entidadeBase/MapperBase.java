@@ -1,11 +1,11 @@
 package api.lojaapi.core.entidadeBase;
 
-import org.mapstruct.Mapper;
+import java.util.Optional;
 
 public interface MapperBase<E extends ProdutoBase, D extends ProdutoBaseDto<? extends E>> {
 
 
-    E paraEntidade(D dto);
+  E paraEntidade(D dto);
 
-    D paraDTO(E entidade);
+  D paraDTO(Optional<E> produtoSalvo);
 }

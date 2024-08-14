@@ -1,4 +1,7 @@
 spring:
+  server:
+    servlet:
+      context-path: /api
   application:
     name: loja-api
   datasource:
@@ -22,4 +25,13 @@ spring:
     multipart:
       max-file-size: 10MB
 
-  #Commit
+  # configurações de logging
+  logging:
+    level:
+      api.lojaapi: debug
+      root: debug
+      org.springframework.test: debug
+      org:
+        flywaydb: debug
+        hibernate:
+          type.descriptor.sql: trace

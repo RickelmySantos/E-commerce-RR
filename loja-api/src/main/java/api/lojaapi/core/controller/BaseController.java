@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,133 +33,128 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(propagation = Propagation.REQUIRED)
 public abstract class BaseController<E extends ProdutoBase, D extends ProdutoBaseDto<? extends E>, M extends MapperBase<E, D>, R extends ProdutoRepositorio<E>, S extends CrudServiceImpl<E, R>> {
 
-    private final S service;
-    private final M mapper;
+  @Autowired
+  private S service;
+  @Autowired
+  private M mapper;
 
-    public BaseController(S service, M mapper) {
-        this.service = service;
-        this.mapper = mapper;
+
+  @GetMapping("/listar")
+  public ResponseEntity<List<E>> listar() {
+    List<E> lista = this.service.listarTodos();
+    return ResponseEntity.ok(lista);
+  }
+
+  @GetMapping("/listar/{id}")
+  public ResponseEntity<Object> buscarPorId(@PathVariable Long id) {
+    Optional<E> entidade = this.service.buscarPorId(id);
+    if (entidade.isPresent()) {
+      return ResponseEntity.ok(entidade.get());
+    } else {
+      return ResponseEntity.notFound().build();
     }
+  }
 
-    @GetMapping("/listar")
-    public ResponseEntity<List<E>> listar() {
-        List<E> lista = service.listarTodos();
-        return ResponseEntity.ok(lista);
+  @GetMapping("/{id}/imagem")
+  public ResponseEntity<byte[]> getImagemProduto(@PathVariable Long id) {
+    Optional<E> entidade = this.service.buscarPorId(id);
+    if (entidade.isPresent() && entidade.get().getImagem() != null) {
+      byte[] imagem = entidade.get().getImagem();
+      return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem);
+    } else {
+      return ResponseEntity.notFound().build();
     }
+  }
 
-    @GetMapping("/listar/{id}")
-    public ResponseEntity<Object> buscarPorId(@PathVariable Long id) {
-        Optional<E> entidade = service.buscarPorId(id);
-        if (entidade.isPresent()) {
-            return ResponseEntity.ok(entidade.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+  @GetMapping("/page")
+  public List<E> listarProdutos(@RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "6") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<E> pageResult = this.service.findPage(pageable);
+    return pageResult.getContent();
+  }
+
+  @PostMapping("/cadastrar")
+  public ResponseEntity<D> cadastrar(@RequestBody @Valid D produtoDto) {
+    E entidade = this.mapper.paraEntidade(produtoDto);
+    Optional<E> produtoSalvo = this.service.cadastrar(entidade);
+
+    D produtoSalvoDto = this.mapper.paraDTO(produtoSalvo);
+    return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvoDto);
+
+  }
+
+  @PostMapping(value = "/cadastrar/imagem", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<String> cadastrarComImagem(@RequestParam("imagem") MultipartFile imagem,
+      @RequestParam("produtoId") Long produtoId) {
+    try {
+      this.service.salvarImagem(produtoId, imagem.getBytes());
+      return ResponseEntity.status(HttpStatus.CREATED).body("Imagem salva com sucesso!");
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Falha ao salvar a imagem");
     }
+  }
 
-    @GetMapping("/{id}/imagem")
-    public ResponseEntity<byte[]> getImagemProduto(@PathVariable Long id) {
-        Optional<E> entidade = service.buscarPorId(id);
-        if (entidade.isPresent() && entidade.get().getImagem() != null) {
-            byte[] imagem = entidade.get().getImagem();
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+  @PostMapping(value = "/cadastrar/upload",
+      consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE},
+      produces = {"application/json"})
+  public ResponseEntity<D> cadastrar(
+      @RequestParam(value = "imagem", required = true) MultipartFile imagem,
+      @RequestParam("produtoDto") @Valid D produtoDto) throws IOException {
+
+    E entidade = this.mapper.paraEntidade(produtoDto);
+
+    entidade.setImagem(imagem.getBytes());
+
+    Optional<E> produtoSalvo = this.service.cadastrar(entidade);
+
+
+    D produtoSalvoDto = this.mapper.paraDTO(produtoSalvo);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvoDto);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<E> atualizar(@PathVariable Long id,
+      @RequestPart(value = "imagem", required = false) MultipartFile imagem,
+      @RequestPart("produtoDto") D produtoDto) {
+    try {
+      Optional<E> entidadOptional = this.service.buscarPorId(id);
+      if (entidadOptional.isPresent()) {
+        return ResponseEntity.notFound().build();
+      }
+      E entidade = this.mapper.paraEntidade(produtoDto);
+      if (imagem != null) {
+        entidade.setImagem(imagem.getBytes());
+      }
+      E produtoAtualizado = this.service.atualizar(entidade);
+      return ResponseEntity.ok(produtoAtualizado);
+    } catch (IOException ex) {
+      ex.printStackTrace();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+  }
 
-    @GetMapping("/page")
-    public List<E> listarProdutos(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<E> pageResult = service.findPage(pageable);
-        return pageResult.getContent();
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    this.service.deletar(id);
+    return ResponseEntity.noContent().build();
+  }
 
-    @PostMapping("/cadastrar")
-    public ResponseEntity<D> cadastrar(@RequestBody @Valid D produtoDto) {
-        E entidade = mapper.paraEntidade(produtoDto);
-        E produtoSalvo = service.cadastrar(entidade);
+  @SuppressWarnings("unchecked")
+  public Class<E> getEntityClass() {
+    return (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass())
+        .getActualTypeArguments()[0];
+  }
 
-        D produtoSalvoDto = mapper.paraDTO(produtoSalvo);
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvoDto);
-
-    }
-
-    @PostMapping(value = "/cadastrar/imagem", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> cadastrarComImagem(@RequestParam("imagem") MultipartFile imagem,
-            @RequestParam("produtoId") Long produtoId) {
-        try {
-            service.salvarImagem(produtoId, imagem.getBytes());
-            return ResponseEntity.status(HttpStatus.CREATED).body("Imagem salva com sucesso!");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Falha ao salvar a imagem");
-        }
-    }
-
-    @PostMapping(value = "/cadastrar/upload",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = {"application/json"})
-    public ResponseEntity<D> cadastrar(
-            @RequestParam(value = "imagem", required = true) MultipartFile imagem,
-            @RequestParam("produtoDto") @Valid D produtoDto) {
-
-        try {
-            E entidade = mapper.paraEntidade(produtoDto);
-            entidade.setImagem(imagem.getBytes());
-            E produtoSalvo = service.cadastrar(entidade);
-
-            D produtoSalvoDto = mapper.paraDTO(produtoSalvo);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvoDto);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<E> atualizar(@PathVariable Long id,
-            @RequestPart(value = "imagem", required = false) MultipartFile imagem,
-            @RequestPart("produtoDto") D produtoDto) {
-        try {
-            Optional<E> entidadOptional = service.buscarPorId(id);
-            if (entidadOptional.isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
-            E entidade = mapper.paraEntidade(produtoDto);
-            if (imagem != null) {
-                entidade.setImagem(imagem.getBytes());
-            }
-            E produtoAtualizado = service.atualizar(entidade);
-            return ResponseEntity.ok(produtoAtualizado);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        service.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @SuppressWarnings("unchecked")
-    public Class<E> getEntityClass() {
-        return (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass())
-                .getActualTypeArguments()[0];
-    }
-
-    @SuppressWarnings("unchecked")
-    public Class<D> getDtoClass() {
-        return (Class<D>) ((ParameterizedType) getClass().getGenericSuperclass())
-                .getActualTypeArguments()[1];
-    }
+  @SuppressWarnings("unchecked")
+  public Class<D> getDtoClass() {
+    return (Class<D>) ((ParameterizedType) this.getClass().getGenericSuperclass())
+        .getActualTypeArguments()[1];
+  }
 
 }
 

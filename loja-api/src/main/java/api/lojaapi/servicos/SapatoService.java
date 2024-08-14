@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SapatoService extends CrudServiceImpl<Sapato, SapatoRepositorio> {
 
-    public SapatoService(SapatoRepositorio repository) {
-        super(repository);
-    }
+  public SapatoService(SapatoRepositorio repository) {
+    super(repository);
+  }
 
 
 }
