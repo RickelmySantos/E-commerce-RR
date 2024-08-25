@@ -54,11 +54,15 @@ $breakpoint arguement choices:
   background-color: #000;
   color: #fafafa;
   text-decoration: none;
-  border-radius: 20rem;
+  border-radius: 0.6rem;
   transition: background-color 0.3s ease;
   cursor: pointer;
 
   &:hover {
     color: #fff;
   }
+}
+
+@mixin animation-delay($index) {
+  animation-delay: calc(25s / 5 * (5 - $index) * -1);
 }

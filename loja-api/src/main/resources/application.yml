@@ -1,0 +1,37 @@
+server:
+  servlet:
+    context-path: /api
+spring:
+  application:
+    name: loja-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loja
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+      database-plataform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  flyway:
+    enable: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+  # configurações de logging
+  logging:
+    level:
+      api.lojaapi: debug
+      root: debug
+      org.springframework.test: debug
+      org:
+        flywaydb: debug
+        hibernate:
+          type.descriptor.sql: trace

@@ -1,87 +1,118 @@
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-
-  &__ul {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 2rem;
-    margin: 0;
-    width: fit-content;
-    gap: 2.5rem;
-  }
-}
-
-.icon {
-  display: flex;
-  margin-left: 4rem;
-  &__icons {
-    display: flex;
-    width: 1.2rem;
-    height: 1.2rem;
-    align-items: end;
-    margin: 0 1rem;
-  }
-}
-
 .header {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  align-items: center;
-  justify-content: space-between;
-
-  &__left {
-    max-width: 70%;
-    padding-left: 2rem;
-    h1 {
-      font-size: 6.4rem;
-      color: #000;
-    }
-    p {
-      margin: 2rem 0;
-    }
-    span {
-      color: #fff;
-      margin-left: 10px;
-      cursor: pointer;
-    }
-  }
-
-  &__img {
-    max-width: 100%;
-    height: auto;
-  }
-}
-
-.flex-generic {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.2rem 0;
-}
-
-.explore {
   display: flex;
   flex: 1 1 auto;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-width: fit-content;
-  margin: 0 auto;
+  justify-content: space-between;
 
-  h2 {
-    font-size: 4rem;
-    font-weight: 600;
-    color: #000;
+  &__content {
+    flex-direction: column;
+    flex: 1;
+    h1 {
+      font-size: 14rem;
+      color: #000;
+    }
+    &__img {
+      flex: 1;
+      width: 100%;
+    }
   }
-  span {
-    font-size: 1.25rem;
-    font-weight: 500;
+}
+
+//<!---Sidebar--->
+.sidebar {
+  max-width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.4rem;
+
+  &__logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-left: 3.4rem;
   }
-  a {
-    margin-top: 2rem;
+  &__highlight {
+    color: goldenrod;
+  }
+  &__nav {
+    display: flex;
+    margin-right: 16rem;
+  }
+  &__list {
+    display: flex;
+    gap: 2rem;
+  }
+  &__item {
+    cursor: pointer;
+    color: #484848;
+
+    &:hover .sidebar__link {
+      text-decoration: underline;
+    }
+  }
+  &__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 0.5em 1em;
+
+    &:hover {
+      color: #000;
+    }
+  }
+  &__img {
+    margin-left: 6rem;
+  }
+}
+
+// Ofertas
+
+.offer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: fit-content;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 6rem;
+
+  &__btn {
+    @include button-style;
+    width: 12.4rem;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+  }
+  &__gallery {
+  }
+}
+
+.offer h1 {
+  font-size: 3.4rem;
+  font-weight: 700;
+  color: #484848;
+  font-family: "Vollkorn", sans-serif;
+}
+
+@media (max-width: 45rem) {
+  .sidebar {
+    font-size: 1rem;
+    padding: 1rem;
+    &__logo {
+      font-size: 1rem;
+      margin-left: 1.6rem;
+    }
+    &__nav {
+      margin-right: 3.2rem;
+    }
+    &__item {
+      gap: 1rem;
+    }
+    &__item li {
+      gap: 1rem;
+      font-size: 0.8rem;
+    }
+    &__img {
+      width: 80%;
+      margin-left: 3rem;
+    }
   }
 }

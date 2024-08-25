@@ -6,6 +6,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -22,14 +23,13 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
+@ToString
 @FieldNameConstants
 @MappedSuperclass
 public abstract class ProdutoBase implements Comparable<ProdutoBase> {
 
     private static final long serialVersionUID = 1L;
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,6 +51,8 @@ public abstract class ProdutoBase implements Comparable<ProdutoBase> {
     protected ProdutoStatus produtoStatus;
     @Enumerated(EnumType.STRING)
     protected CategoriaBase categoriaBase;
+    @Lob
+    protected byte[] imagem;
 
     @Override
     public int compareTo(ProdutoBase entidade) {

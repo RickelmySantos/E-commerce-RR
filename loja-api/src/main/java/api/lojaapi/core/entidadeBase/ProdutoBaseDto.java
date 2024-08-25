@@ -19,20 +19,19 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public abstract class ProdutoBaseDto<E extends ProdutoBase>
         implements Comparable<ProdutoBaseDto<E>> {
 
     private final static long serialVersionUID = 1L;
-
 
     @Positive
     @ToString.Include
     @EqualsAndHashCode.Include
     protected Long id;
     @NotBlank
-    @Size(min = 10, max = 50, message = "Tamanho mínimo de caracteres é 10 e o máximo 50")
+    @Size(min = 2, max = 50, message = "Tamanho mínimo de caracteres é 2 e o máximo 50")
     protected String nome;
     @NotBlank
     protected String marca;
@@ -44,6 +43,8 @@ public abstract class ProdutoBaseDto<E extends ProdutoBase>
     protected ProdutoStatus produtoStatus;
 
     protected CategoriaBase categoriaBase;
+
+    // protected MultipartFile imagem;
 
     @Override
     public int compareTo(ProdutoBaseDto<E> dto) {
