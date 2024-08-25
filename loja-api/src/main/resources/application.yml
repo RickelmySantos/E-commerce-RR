@@ -1,7 +1,7 @@
+server:
+  servlet:
+    context-path: /api
 spring:
-  server:
-    servlet:
-      context-path: /api
   application:
     name: loja-api
   datasource:

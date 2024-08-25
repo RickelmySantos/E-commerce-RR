@@ -1,6 +1,8 @@
 package api.lojaapi.core.servicos;
 
 import api.lojaapi.core.entidadeBase.ProdutoBase;
+import api.lojaapi.core.exceptions.customExceptions.ImageNotFoundException;
+import api.lojaapi.core.exceptions.customExceptions.ProductNotFoundException;
 import api.lojaapi.core.repositorios.ProdutoRepositorio;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -11,12 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 @Service
-public abstract class CrudServiceImpl<E extends ProdutoBase, R extends ProdutoRepositorio<E>> {
+public abstract class CrudService<E extends ProdutoBase, R extends ProdutoRepositorio<E>> {
 
 
   protected final R repository;
 
-  protected CrudServiceImpl(R repository) {
+  protected CrudService(R repository) {
     this.repository = repository;
   }
 
@@ -44,10 +46,12 @@ public abstract class CrudServiceImpl<E extends ProdutoBase, R extends ProdutoRe
     Assert.notNull(entidade, "Entidade não pode ser nula");
     Assert.notNull(entidade.getId(), "Id nao pode ser nulo");
     Assert.isTrue(entidade.getId() > 0, "Id deve ser maior que 0");
+
     Optional<E> result = this.buscarPorId(entidade.getId());
 
     if (result.isEmpty()) {
-      throw new EntityNotFoundException("Não foi possível encontrar a entidade com o Id informado");
+      throw new ProductNotFoundException(
+          "Não foi possível encontrar a entidade com o Id informado");
     }
     return this.repository.save(entidade);
   }
@@ -63,14 +67,19 @@ public abstract class CrudServiceImpl<E extends ProdutoBase, R extends ProdutoRe
   }
 
   public E salvarImagem(Long id, byte[] imagem) {
+    E entidade = this.repository.findById(id).orElseThrow(() -> new ProductNotFoundException(
+        "Não foi possível encontrar a entidade com o Id informado"));
 
-    Optional<E> entidadeOptional = this.repository.findById(id);
-    if (entidadeOptional.isPresent()) {
-      E entidade = entidadeOptional.get();
-      entidade.setImagem(imagem);
-      return this.repository.save(entidade);
-    } else {
-      throw new EntityNotFoundException("Produto com id " + id + " não encontrado!");
+    entidade.setImagem(imagem);
+    return this.repository.save(entidade);
+  }
+
+  public byte[] getImagemProduto(Long id) {
+    E entidade = this.buscarPorId(id)
+        .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
+    if (entidade.getImagem() == null) {
+      throw new ImageNotFoundException("Imagem não encontrada para o produto");
     }
+    return entidade.getImagem();
   }
 }

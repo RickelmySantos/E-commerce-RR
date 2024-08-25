@@ -7,12 +7,12 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   selector: 'app-header',
   template: `
     <section class="header">
-      <div class="header__content">
+      <div class="header__content border-1">
         <h1>Aumente sua velocidade</h1>
         <p>Coleções exclusivas e tendênciosas</p>
-        <a href="" class="btn"> Compre Agora</a>
+        <a href="" class="header__btn"> Compre Agora</a>
       </div>
-      <div class="header__imagens">
+      <div class="header__img border-1">
         <img
           src="/assets/images/tenis-nike/nike-air-jordan-2.png"
           alt=""
@@ -20,7 +20,9 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
         />
       </div>
     </section>
-    <app-infinit-scroll></app-infinit-scroll>
+    <div class="mt-4">
+      <app-infinit-scroll></app-infinit-scroll>
+    </div>
   `,
   standalone: true,
   // changeDetection: ChangeDetectionStrategy.OnPush,
